@@ -8,7 +8,7 @@ namespace MultiTenantSchema.Contexts
 {
     public class MultiTenantDbContext : DbContext
     {
-        public DbSet<User> UserDbSet { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public MultiTenantDbContext(DbContextOptions<MultiTenantDbContext> options) : base(options)
         {
