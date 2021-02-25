@@ -6,12 +6,14 @@ using MultiTenantSchema.Models;
 
 namespace MultiTenantSchema.Contexts
 {
-    public class MultiTenantDbContext : DbContext
+    public class MultiTenantDbContext : DbContext, IDbContextSchema
     {
+        public string SchemaName { get; }
         public DbSet<User> Users { get; set; }
 
-        public MultiTenantDbContext(DbContextOptions<MultiTenantDbContext> options) : base(options)
+        public MultiTenantDbContext(DbContextOptions<MultiTenantDbContext> options, string schema) : base(options)
         {
+            SchemaName = schema;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
