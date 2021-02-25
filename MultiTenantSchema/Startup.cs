@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,8 @@ namespace MultiTenantSchema
             services.AddDbContext<MultiTenantDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString(nameof(MultiTenantDbContext)))
-                    .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>();
+                        .ReplaceService<IModelCacheKeyFactory, DbSchemaAwareModelCacheKeyFactory>()
+                        .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>();
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

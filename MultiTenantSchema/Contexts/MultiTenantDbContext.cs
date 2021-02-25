@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MultiTenantSchema.EntityConfiguration;
 using MultiTenantSchema.Models;
 
 namespace MultiTenantSchema.Contexts
@@ -18,9 +19,9 @@ namespace MultiTenantSchema.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .Property(u => u.Id)
-                .HasDefaultValueSql("(newid())");
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new UserEntityConfiguration(SchemaName));
         }
 
         public override int SaveChanges()
