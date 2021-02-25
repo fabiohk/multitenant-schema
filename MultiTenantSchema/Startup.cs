@@ -29,6 +29,8 @@ namespace MultiTenantSchema
                         .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>();
             });
 
+            services.AddSingleton<IConfiguration>(Configuration);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
