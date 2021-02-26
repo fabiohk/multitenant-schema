@@ -22,13 +22,6 @@ namespace MultiTenantSchema
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MultiTenantDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString(nameof(MultiTenantDbContext)))
-                        .ReplaceService<IModelCacheKeyFactory, DbSchemaAwareModelCacheKeyFactory>()
-                        .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>();
-            });
-
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

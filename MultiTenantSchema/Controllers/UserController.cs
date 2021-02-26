@@ -11,7 +11,7 @@ using MultiTenantSchema.Support;
 
 namespace MultiTenantSchema.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -20,9 +20,9 @@ namespace MultiTenantSchema.Controllers
         {
             _configuration = configuration;
         }
-        // GET api/values
+
         [HttpGet]
-        public async Task<IEnumerable<User>> Get([FromQuery] string schema = "people")
+        public async Task<IEnumerable<User>> Get([FromQuery] string schema)
         {
             using (var dbContext = GetMultiTenantDbContext(schema))
             {
@@ -31,15 +31,14 @@ namespace MultiTenantSchema.Controllers
         }
 
         [HttpPost("{schema}")]
-        public async Task<User> Post([FromBody] string username, [FromRoute] string schema)
+        public async Task<User> Post([FromBody] User newUser, [FromRoute] string schema)
         {
-            var user = new User() { Username = username };
             using (var dbContext = GetMultiTenantDbContext(schema))
             {
-                dbContext.Add(user);
+                dbContext.Add(newUser);
                 await dbContext.SaveChangesAsync();
             }
-            return user;
+            return newUser;
         }
 
         private MultiTenantDbContext GetMultiTenantDbContext(string schema)
