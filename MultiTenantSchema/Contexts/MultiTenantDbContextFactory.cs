@@ -19,6 +19,11 @@ namespace MultiTenantSchema.Contexts
                 .Build();
 
             var schema = Environment.GetEnvironmentVariable("DB_SCHEMA");
+            return CreateDbContext(schema, config);
+        }
+
+        public static MultiTenantDbContext CreateDbContext(string schema, IConfiguration config)
+        {
             var optionsBuilder = new DbContextOptionsBuilder<MultiTenantDbContext>();
             var connectionString = config.GetConnectionString(nameof(MultiTenantDbContext));
 

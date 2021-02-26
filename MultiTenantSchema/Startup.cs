@@ -24,6 +24,8 @@ namespace MultiTenantSchema
         {
             services.AddSingleton<IConfiguration>(Configuration);
 
+            services.AddScoped<DbContextLocator>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
