@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MultiTenantSchema.Contexts;
 using MultiTenantSchema.Models;
 using MultiTenantSchema.Support;
@@ -16,23 +17,27 @@ namespace MultiTenantSchema.Controllers
     public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public UserController(IConfiguration configuration)
+        private readonly ILogger<UserController> _logger;
+        public UserController(IConfiguration configuration, ILogger<UserController> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<User>> Get([FromQuery] string schema)
+        public async Task<ActionResult> Get([FromQuery] string schema)
         {
+            _logger.LogInformation("Retrieving users from {schema}", schema);
             using (var dbContext = GetMultiTenantDbContext(schema))
             {
-                return await dbContext.Users.ToListAsync();
+                return Ok(new { Users = await dbContext.Users.ToListAsync() });
             }
         }
 
         [HttpPost("{schema}")]
         public async Task<User> Post([FromBody] User newUser, [FromRoute] string schema)
         {
+            _logger.LogInformation("Trying to create a new user ({username}) for {schema}", newUser.Username, schema);
             using (var dbContext = GetMultiTenantDbContext(schema))
             {
                 dbContext.Add(newUser);

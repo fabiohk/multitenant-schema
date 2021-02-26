@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MultiTenantSchema.Contexts;
 using MultiTenantSchema.Support;
 
@@ -21,14 +22,17 @@ namespace MultiTenantSchema.Controllers
     public class TenantController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public TenantController(IConfiguration configuration)
+        private readonly ILogger<TenantController> _logger;
+        public TenantController(IConfiguration configuration, ILogger<TenantController> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Tenant tenant)
         {
+            _logger.LogInformation("Creating a new tenant...");
             using (var dbContext = GetMultiTenantDbContext(tenant.TenantName))
             {
                 await dbContext.Database.MigrateAsync();
